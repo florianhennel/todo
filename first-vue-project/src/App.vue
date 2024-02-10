@@ -5,6 +5,7 @@ import { ref, watch } from 'vue';
 export interface ToDoInterface{
     taskId:number, 
     task: string,
+    done:boolean,
 }
 const tasks = ref<ToDoInterface[]>([]);
 const input = ref<string>("");
@@ -44,10 +45,10 @@ const addTask = async ()=>{
     }
     const json = await response.json();
     if (json) {
-      console.log(json);
       tasks.value.push({
         taskId:json.taskId,
         task:json.task,
+        done:json.done,
       })
       input.value = "";
     }
@@ -58,19 +59,36 @@ const addTask = async ()=>{
 </script>
 
 <template>
-  <div v-for="t in tasks" id="tasks">
-    <ToDo :taskId="t.taskId" :task="t.task" />
+  <div class="tasks">
+    <ToDo v-for="t in tasks" v-bind="t" />
   </div>
-  <div>
-    <input type="text" name="addToDo" id="addToDo" v-model="input">
+  
+  <div class="addTask">
+    <input type="text" class="textInput" v-model="input">
     <button @click="addTask">Add new task!</button>
   </div>
 
 </template>
 <style scoped>
-#tasks{
+.tasks{
   display: flex;
+  padding: 5%;
+  border-radius: 30px;
+  background-color: #343434;
+  margin-bottom: 1rem;
   flex-direction: column;
   gap: 2rem;
+  width: 33%;
+}
+.textInput{
+  padding: 1rem;
+  height: 1em;
+  font-size: larger;
+}
+.addTask{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding:1rem;
 }
 </style>
